@@ -46,6 +46,10 @@ COPY start.sh start.sh
 
 COPY config.properties config.properties
 
+RUN groupadd -r languagetool && useradd --no-log-init -r -g languagetool languagetool
+
+USER languagetool
+
 CMD [ "bash", "start.sh" ]
 
 EXPOSE 8010
