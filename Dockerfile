@@ -29,6 +29,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y \
     && apt-get install -y \
+        bash \
         libgomp1 \
         openjdk-8-jre-headless \
     && apt-get clean
@@ -41,6 +42,10 @@ WORKDIR /LanguageTool-${LANGUAGE_TOOL_VERSION}
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
-CMD [ "java", "-cp", "languagetool-server.jar", "org.languagetool.server.HTTPServer", "--port", "8010", "--public", "--allow-origin", "'*'"]
+COPY start.sh start.sh
+
+COPY config.properties config.properties
+
+CMD [ "bash", "start.sh" ]
 
 EXPOSE 8010

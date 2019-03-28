@@ -19,3 +19,9 @@ git clone https://github.com/Erikvl87/docker-languagetool.git
 docker build -t languagetool .
 docker run --rm -it -p 8010:8010 languagetool
 ```
+
+## HTTPServerConfig
+You are able to use the [HTTPServerConfig](https://languagetool.org/development/api/org/languagetool/server/HTTPServerConfig.html) configuration options by prefixing the fields with `langtool_` and setting them as [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
+
+## Heap size
+LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) `Java_Xms` or `Java_Xmx`.
