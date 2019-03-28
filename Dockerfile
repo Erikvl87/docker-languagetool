@@ -1,24 +1,46 @@
-FROM debian:stretch
+ARG LANGUAGE_TOOL_VERSION=4.5.1
 
-RUN set -ex \
-    && mkdir -p /uploads /etc/apt/sources.list.d /var/cache/apt/archives/ \
-    && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get clean \
-    && apt-get update -y \
+FROM debian:stretch as build
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y \
     && apt-get install -y \
         bash \
+        openjdk-8-jdk-headless \
+        git \
+        maven \
+        unzip \
+    && apt-get clean
+
+ARG LANGUAGE_TOOL_VERSION
+
+RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGE_TOOL_VERSION}
+
+WORKDIR /languagetool
+
+RUN ["bash", "build.sh", "languagetool-standalone", "package", "-DskipTests"]
+
+RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGE_TOOL_VERSION}.zip -d /dist
+
+FROM debian:stretch
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y \
+    && apt-get install -y \
+        libgomp1 \
         openjdk-8-jre-headless \
-        unzip
+    && apt-get clean
 
-ENV VERSION 4.5
-ADD https://www.languagetool.org/download/LanguageTool-$VERSION.zip /LanguageTool-$VERSION.zip
+ARG LANGUAGE_TOOL_VERSION
 
-RUN unzip LanguageTool-$VERSION.zip \
-    && rm LanguageTool-$VERSION.zip
+COPY --from=build /dist .
 
-WORKDIR /LanguageTool-$VERSION
+WORKDIR /LanguageTool-${LANGUAGE_TOOL_VERSION}
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
-CMD [ "java", "-cp", "languagetool-server.jar", "org.languagetool.server.HTTPServer", "--port", "8010", "--public", "--allow-origin", "'*'" ]
+CMD [ "java", "-cp", "languagetool-server.jar", "org.languagetool.server.HTTPServer", "--port", "8010", "--public", "--allow-origin", "'*'"]
+
 EXPOSE 8010
