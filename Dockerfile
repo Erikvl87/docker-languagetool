@@ -19,7 +19,7 @@ RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b 
 
 WORKDIR /languagetool
 
-RUN ["bash", "build.sh", "languagetool-standalone", "package", "-DskipTests"]
+RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 
 RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGE_TOOL_VERSION}.zip -d /dist
 
