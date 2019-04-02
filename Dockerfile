@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y \
     && apt-get install -y \
+        locales \
         bash \
         openjdk-8-jdk-headless \
         git \
@@ -18,6 +19,11 @@ ARG LANGUAGE_TOOL_VERSION
 RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGE_TOOL_VERSION}
 
 WORKDIR /languagetool
+
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8
 
 RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 
