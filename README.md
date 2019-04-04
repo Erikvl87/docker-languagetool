@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/Erikvl87/docker-languagetool.svg?branch=master)](https://travis-ci.org/Erikvl87/docker-languagetool)
-# Introduction
-This is an unofficial repository that is used to run [LanguageTool](https://www.languagetool.org/) in Docker.
+# Dockerfile for LanguageTool
+This repository contains a Dockerfile to create a Docker image for [LanguageTool](https://github.com/languagetool-org/languagetool).
 
-LanguageTool is an Open Source proofreading software for English, French, German, Polish, Russian, and [more than 20 other languages](https://languagetool.org/languages/). It finds many errors that a simple spell checker cannot detect.
+ [LanguageTool](https://www.languagetool.org/) is an Open Source proofreading software for English, French, German, Polish, Russian, and [more than 20 other languages](https://languagetool.org/languages/). It finds many errors that a simple spell checker cannot detect.
 
 # Usage
 
