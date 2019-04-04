@@ -1,4 +1,4 @@
-ARG LANGUAGE_TOOL_VERSION=4.5.1
+ARG LANGUAGETOOL_VERSION=4.5.1
 
 FROM debian:stretch as build
 
@@ -14,20 +14,20 @@ RUN apt-get update -y \
         unzip \
     && apt-get clean
 
-ARG LANGUAGE_TOOL_VERSION
-
-RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGE_TOOL_VERSION}
-
-WORKDIR /languagetool
-
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
 
+ARG LANGUAGETOOL_VERSION
+
+RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGETOOL_VERSION}
+
+WORKDIR /languagetool
+
 RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 
-RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGE_TOOL_VERSION}.zip -d /dist
+RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_VERSION}.zip -d /dist
 
 FROM debian:stretch
 
@@ -40,11 +40,11 @@ RUN apt-get update -y \
         openjdk-8-jre-headless \
     && apt-get clean
 
-ARG LANGUAGE_TOOL_VERSION
+ARG LANGUAGETOOL_VERSION
 
 COPY --from=build /dist .
 
-WORKDIR /LanguageTool-${LANGUAGE_TOOL_VERSION}
+WORKDIR /LanguageTool-${LANGUAGETOOL_VERSION}
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 

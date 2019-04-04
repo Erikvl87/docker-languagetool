@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Erikvl87/docker-languagetool.svg?branch=master)](https://travis-ci.org/Erikvl87/docker-languagetool)
 # Introduction
 This is an unofficial repository that is used to run [LanguageTool](https://www.languagetool.org/) in Docker.
 

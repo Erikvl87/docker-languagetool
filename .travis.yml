@@ -1,0 +1,22 @@
+language: generic
+services:
+- docker
+jobs:
+  include:
+    - stage: build-and-test
+      script:
+        - docker build --target=build -t languagetool-build .
+        - docker run languagetool-build mvn clean test --quiet
+    - stage: release-versioned
+      if: tag =~ ^v([0-9]+\.[0-9]+\.[0-9]+(?:-.*)?)$
+      script:
+        - LANGUAGETOOL_VERSION=$(grep -m 1 -oP '(?<=ARG LANGUAGETOOL_VERSION=)([0-9]+\.[0-9]+\.[0-9]+)' Dockerfile)
+        - docker build -t $DOCKER_USERNAME/languagetool:$LANGUAGETOOL_VERSION .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_USERNAME/languagetool:$LANGUAGETOOL_VERSION
+    - stage: release-latest
+      if: tag =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
+      script:
+        - docker build -t $DOCKER_USERNAME/languagetool:latest .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_USERNAME/languagetool:latest
