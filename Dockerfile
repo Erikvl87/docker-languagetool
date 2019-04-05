@@ -8,6 +8,7 @@ RUN apt-get update -y \
     && apt-get install -y \
         locales \
         bash \
+        libgomp1 \
         openjdk-8-jdk-headless \
         git \
         maven \
