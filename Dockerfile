@@ -30,16 +30,12 @@ RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "
 
 RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_VERSION}.zip -d /dist
 
-FROM debian:stretch
+FROM java:8-jre-alpine
 
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update -y \
-    && apt-get install -y \
+RUN apk update \
+    && apk add \
         bash \
-        libgomp1 \
-        openjdk-8-jre-headless \
-    && apt-get clean
+        libgomp
 
 ARG LANGUAGETOOL_VERSION
 
@@ -53,7 +49,7 @@ COPY start.sh start.sh
 
 COPY config.properties config.properties
 
-RUN groupadd -r languagetool && useradd --no-log-init -r -g languagetool languagetool
+RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
 USER languagetool
 
