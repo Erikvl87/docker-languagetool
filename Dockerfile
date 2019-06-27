@@ -1,4 +1,4 @@
-ARG LANGUAGETOOL_VERSION=4.5.1
+ARG LANGUAGETOOL_VERSION=4.6
 
 FROM debian:stretch as build
 
@@ -30,12 +30,13 @@ RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "
 
 RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_VERSION}.zip -d /dist
 
-FROM java:8-jre-alpine
+FROM openjdk:8-jre-alpine
 
 RUN apk update \
     && apk add \
         bash \
-        libgomp
+        libgomp \
+        gcompat
 
 ARG LANGUAGETOOL_VERSION
 
