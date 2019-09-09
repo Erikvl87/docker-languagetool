@@ -17,7 +17,7 @@ This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](htt
 
 ## Using the Dockerfile
 ```
-git clone https://github.com/Erikvl87/docker-languagetool.git
+git clone https://github.com/Erikvl87/docker-languagetool.git --config core.autocrlf=input
 docker build -t languagetool .
 docker run --rm -it -p 8010:8010 languagetool
 ```
