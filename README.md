@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Erikvl87/docker-languagetool.svg?branch=master)](https://travis-ci.org/Erikvl87/docker-languagetool) [![Docker Pulls](https://img.shields.io/docker/pulls/erikvl87/languagetool)](https://hub.docker.com/r/erikvl87/languagetool)
+[![Build Status](https://travis-ci.org/Erikvl87/docker-languagetool.svg?branch=master)](https://travis-ci.org/Erikvl87/docker-languagetool) [![Docker Pulls](https://img.shields.io/docker/pulls/erikvl87/languagetool)](https://hub.docker.com/r/erikvl87/languagetool) [![Latest GitHub tag](https://img.shields.io/github/v/tag/Erikvl87/docker-languagetool?label=GitHub%20tag)](https://github.com/Erikvl87/docker-languagetool/releases)
 
 # Dockerfile for LanguageTool
 This repository contains a Dockerfile to create a Docker image for [LanguageTool](https://github.com/languagetool-org/languagetool).
