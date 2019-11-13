@@ -13,7 +13,7 @@ docker pull erikvl87/languagetool
 docker run --rm -p 8010:8010 erikvl87/languagetool
 ```
 
-This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](https://hub.docker.com/r/erikvl87/languagetool/tags) to pin onto a fixed version. These versions are derived from the official LanguageTool releases. Updates to the Dockerfile for already published versions are released with the `dockerupdate-X` postfix in the tag.
+This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](https://hub.docker.com/r/erikvl87/languagetool/tags) to pin onto a fixed version. These versions are derived from the official LanguageTool releases. Updates to the Dockerfile for already published versions are released with a `-dockerupdate-{X}` postfix in the tag (where `{X}` is an incremental number).
 
 ## Using the Dockerfile
 ```
