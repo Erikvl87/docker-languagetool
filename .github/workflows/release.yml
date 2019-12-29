@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+-dockerupdate-[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-dockerupdate-[0-9]+'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Download
+        run: docker build --target=build -t languagetool-build .
+      - name: Test
+        run: docker run languagetool-build mvn clean test --quiet
+      - name: Tag
+        run: echo "::set-env name=DOCKER_TAG::$(echo ${{ github.ref }} | grep -oP '(?<=$VERSION_PREFIX).*')"
+        env:
+          VERSION_PREFIX: refs/tags/v
+      - name: Build
+        run: docker build -t languagetool .
+      - name: Push to Docker Hub
+        run: |
+          docker tag languagetool $DOCKERHUB_REPOSITORY:$DOCKER_TAG
+          docker tag languagetool $DOCKERHUB_REPOSITORY:latest
+          echo "${{ secrets.DOCKERHUB_ACCESSTOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push $DOCKERHUB_REPOSITORY:$DOCKER_TAG
+          docker push $DOCKERHUB_REPOSITORY:latest
+        env:
+          DOCKERHUB_REPOSITORY: erikvl87/languagetool
+      - name: Push to GitHub
+        run: |
+          docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
+          docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:latest
+          docker login docker.pkg.github.com -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+          docker push docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
