@@ -46,11 +46,11 @@ WORKDIR /LanguageTool-${LANGUAGETOOL_VERSION}
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
-COPY start.sh start.sh
-
-COPY config.properties config.properties
-
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
+
+COPY --chown=languagetool start.sh start.sh
+
+COPY --chown=languagetool config.properties config.properties
 
 USER languagetool
 
