@@ -5,9 +5,9 @@ This repository contains a Dockerfile to create a Docker image for [LanguageTool
 
  [LanguageTool](https://www.languagetool.org/) is an Open Source proofreading software for English, French, German, Polish, Russian, and [more than 20 other languages](https://languagetool.org/languages/). It finds many errors that a simple spell checker cannot detect.
 
-# Usage
+# Setup
 
-## Using Docker Hub
+## Setup using Docker Hub
 ```
 docker pull erikvl87/languagetool
 docker run --rm -p 8010:8010 erikvl87/languagetool
@@ -15,7 +15,7 @@ docker run --rm -p 8010:8010 erikvl87/languagetool
 
 This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](https://hub.docker.com/r/erikvl87/languagetool/tags) to pin onto a fixed version. These versions are derived from the official LanguageTool releases. Updates to the Dockerfile for already published versions are released with a `-dockerupdate-{X}` postfix in the tag (where `{X}` is an incremental number).
 
-## Using the Dockerfile
+## Setup using the Dockerfile
 ```
 git clone https://github.com/Erikvl87/docker-languagetool.git --config core.autocrlf=input
 docker build -t languagetool .
@@ -27,3 +27,13 @@ You are able to use the [HTTPServerConfig](https://languagetool.org/development/
 
 ## Heap size
 LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) `Java_Xms` or `Java_Xmx`.
+
+# Usage
+By default this image is configured to listen on port 8010 which diviates from the default port of LanguageTool 8081.
+
+An example cURL request:
+```
+curl --data "language=en-US&text=a simple test" http://localhost:8010/v2/check
+```
+
+Please refer to the official LanguageTool documentation for further usage instructions.
