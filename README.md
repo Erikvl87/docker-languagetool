@@ -3,7 +3,7 @@
 # Dockerfile for LanguageTool
 This repository contains a Dockerfile to create a Docker image for [LanguageTool](https://github.com/languagetool-org/languagetool).
 
- [LanguageTool](https://www.languagetool.org/) is an Open Source proofreading software for English, French, German, Polish, Russian, and [more than 20 other languages](https://languagetool.org/languages/). It finds many errors that a simple spell checker cannot detect.
+> [LanguageTool](https://www.languagetool.org/) is an Open Source proofreading software for English, French, German, Polish, Russian, and [more than 20 other languages](https://languagetool.org/languages/). It finds many errors that a simple spell checker cannot detect.
 
 # Setup
 
@@ -24,6 +24,18 @@ docker run --rm -it -p 8010:8010 languagetool
 
 ## HTTPServerConfig
 You are able to use the [HTTPServerConfig](https://languagetool.org/development/api/org/languagetool/server/HTTPServerConfig.html) configuration options by prefixing the fields with `langtool_` and setting them as [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
+
+## Using n-gram datasets
+> LanguageTool can make use of large n-gram data sets to detect errors with words that are often confused, like __their__ and __there__.
+
+*Source: [http://wiki.languagetool.org/finding-errors-using-n-gram-data](http://wiki.languagetool.org/finding-errors-using-n-gram-data)*
+
+[Download](http://languagetool.org/download/ngram-data/) the n-gram dataset(s) to your local machine and mount the local n-gram data directory to the `/ngrams` directory in the Docker container [using the `-v` configuration](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) and set the `languageModel` configuration to the `/ngrams` folder.
+
+An example startup configuration:
+```
+docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v local/path/to/ngrams:/ngrams erikvl87/languagetool
+```
 
 ## Heap size
 LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) `Java_Xms` or `Java_Xmx`.
