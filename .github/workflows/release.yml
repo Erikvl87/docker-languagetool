@@ -30,9 +30,9 @@ jobs:
           docker push $DOCKERHUB_REPOSITORY:latest
         env:
           DOCKERHUB_REPOSITORY: erikvl87/languagetool
-      - name: Push to GitHub
-        run: |
-          docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
-          docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:latest
-          docker login docker.pkg.github.com -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-          docker push docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
+      # - name: Push to GitHub Packages
+      #   run: |
+      #     docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
+      #     docker tag languagetool docker.pkg.github.com/${{ github.repository }}/languagetool:latest
+      #     docker login docker.pkg.github.com -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+      #     docker push docker.pkg.github.com/${{ github.repository }}/languagetool:$DOCKER_TAG
