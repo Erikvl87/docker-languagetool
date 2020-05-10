@@ -53,6 +53,35 @@ An example startup configuration:
 docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v local/path/to/ngrams:/ngrams erikvl87/languagetool
 ```
 
+## Improving the spell checker
+
+> You can improve the spell checker without touching the dictionary. For single words (no spaces), you can add your words to one of these files:
+> * `spelling.txt`: words that the spell checker will ignore and use to generate corrections if someone types a similar word
+> * `ignore.txt`: words that the spell checker will ignore but not use to generate corrections
+> * `prohibited.txt`: words that should be considered incorrect even though the spell checker would accept them
+
+*Source: [http://wiki.languagetool.org/hunspell-support](http://wiki.languagetool.org/hunspell-support)*
+
+The following `Dockerfile` contains an example on how to add words to `spelling.txt`. It assumes you have your own list of words in `en_spelling_additions.txt` next to the `Dockerfile`.
+```
+FROM erikvl87/languagetool
+
+# Improving the spell checker
+# http://wiki.languagetool.org/hunspell-support
+USER root
+COPY en_spelling_additions.txt en_spelling_additions.txt
+RUN  (echo; cat en_spelling_additions.txt) >> org/languagetool/resource/en/hunspell/spelling.txt
+USER languagetool
+```
+
+You can build & run the custom Dockerfile with the following two commands:
+```
+docker build -t languagetool-custom .
+docker run --rm -it -p 8010:8010 languagetool-custom
+```
+
+You can add words to other languages by changing the `en` language tag in the target path. Note that for some languages, e.g. for `nl` the `spelling.txt` file is not in the `hunspell` folder: `org/languagetool/resource/nl/spelling/spelling.txt`.
+
 # Usage
 By default this image is configured to listen on port 8010 which diviates from the default port of LanguageTool 8081.
 
