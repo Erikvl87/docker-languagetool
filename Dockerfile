@@ -52,6 +52,10 @@ COPY --chown=languagetool start.sh start.sh
 
 COPY --chown=languagetool config.properties config.properties
 
+COPY --chown=languagetool en_spelling_additions.txt en_spelling_additions.txt
+
+RUN  (echo; cat en_spelling_additions.txt) >> org/languagetool/resource/en/hunspell/spelling.txt
+
 USER languagetool
 
 CMD [ "bash", "start.sh" ]
