@@ -13,6 +13,7 @@ RUN apt-get update -y \
         git \
         maven \
         unzip \
+        xmlstarlet \
     && apt-get clean
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -28,7 +29,9 @@ WORKDIR /languagetool
 
 RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 
-RUN unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_VERSION}.zip -d /dist
+RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM/4.0.0" -t -v "//x:project/x:properties/x:languagetool.version" pom.xml) && unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_DIST_VERSION}.zip -d /dist
+
+RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
 
 FROM openjdk:8-jre-alpine
 
@@ -42,7 +45,7 @@ ARG LANGUAGETOOL_VERSION
 
 COPY --from=build /dist .
 
-WORKDIR /LanguageTool-${LANGUAGETOOL_VERSION}
+WORKDIR /LanguageTool
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
