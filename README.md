@@ -44,7 +44,7 @@ docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms
 ## Using n-gram datasets
 > LanguageTool can make use of large n-gram data sets to detect errors with words that are often confused, like __their__ and __there__.
 
-*Source: [http://wiki.languagetool.org/finding-errors-using-n-gram-data](http://wiki.languagetool.org/finding-errors-using-n-gram-data)*
+*Source: [https://dev.languagetool.org/finding-errors-using-n-gram-data](https://dev.languagetool.org/finding-errors-using-n-gram-data)*
 
 [Download](http://languagetool.org/download/ngram-data/) the n-gram dataset(s) to your local machine and mount the local n-gram data directory to the `/ngrams` directory in the Docker container [using the `-v` configuration](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) and set the `languageModel` configuration to the `/ngrams` folder.
 
@@ -60,7 +60,7 @@ docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v local/path
 > * `ignore.txt`: words that the spell checker will ignore but not use to generate corrections
 > * `prohibited.txt`: words that should be considered incorrect even though the spell checker would accept them
 
-*Source: [http://wiki.languagetool.org/hunspell-support](http://wiki.languagetool.org/hunspell-support)*
+*Source: [https://dev.languagetool.org/hunspell-support](https://dev.languagetool.org/hunspell-support)*
 
 The following `Dockerfile` contains an example on how to add words to `spelling.txt`. It assumes you have your own list of words in `en_spelling_additions.txt` next to the `Dockerfile`.
 ```
