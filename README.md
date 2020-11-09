@@ -82,6 +82,27 @@ docker run --rm -it -p 8010:8010 languagetool-custom
 
 You can add words to other languages by changing the `en` language tag in the target path. Note that for some languages, e.g. for `nl` the `spelling.txt` file is not in the `hunspell` folder: `org/languagetool/resource/nl/spelling/spelling.txt`.
 
+# Docker Compose
+
+This image can also be used with [Docker Compose](https://docs.docker.com/compose/). An example `docker-compose.yml` would be:
+
+```yaml
+version: "3"
+
+services:
+  languagetool:
+    image: erikvl87/languagetool
+    container_name: languagetool
+    ports:
+        - 8010:8010  # Using default port from the image
+    environment:
+        - langtool_languageModel=/ngrams  # OPTIONAL: Using ngrams data
+        - Java_Xms=512m  # OPTIONAL: Setting a minimal Java heap size of 512 mib
+        - Java_Xmx=1g  # OPTIONAL: Setting a maximum Java heap size of 1 Gib
+    volumes:
+        - /path/to/ngrams/data:/ngrams
+```
+
 # Usage
 By default this image is configured to listen on port 8010 which diviates from the default port of LanguageTool 8081.
 
