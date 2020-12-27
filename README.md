@@ -104,7 +104,7 @@ services:
 ```
 
 # Usage
-By default this image is configured to listen on port 8010 which diviates from the default port of LanguageTool 8081.
+By default this image is configured to listen on port 8010 which deviates from the default port of LanguageTool 8081.
 
 An example cURL request:
 ```
