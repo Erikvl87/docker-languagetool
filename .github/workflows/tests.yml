@@ -13,4 +13,4 @@ jobs:
     - name: Download
       run: docker build --target=build -t languagetool-build .
     - name: Run tests
-      run: docker run languagetool-build mvn clean test --quiet
+      run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet

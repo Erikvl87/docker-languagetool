@@ -1,4 +1,4 @@
-ARG LANGUAGETOOL_VERSION=5.1.3
+ARG LANGUAGETOOL_VERSION=5.2
 
 FROM debian:stretch as build
 
@@ -6,14 +6,14 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -y \
     && apt-get install -y \
-        locales \
-        bash \
-        libgomp1 \
-        openjdk-8-jdk-headless \
-        git \
-        maven \
-        unzip \
-        xmlstarlet \
+    locales \
+    bash \
+    libgomp1 \
+    openjdk-8-jdk-headless \
+    git \
+    maven \
+    unzip \
+    xmlstarlet \
     && apt-get clean
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -37,9 +37,9 @@ FROM openjdk:8-jre-alpine
 
 RUN apk update \
     && apk add \
-        bash \
-        libgomp \
-        gcompat
+    bash \
+    libgomp \
+    gcompat
 
 ARG LANGUAGETOOL_VERSION
 

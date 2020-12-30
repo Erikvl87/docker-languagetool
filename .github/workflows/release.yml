@@ -16,7 +16,7 @@ jobs:
       - name: Download
         run: docker build --target=build -t languagetool-build .
       - name: Test
-        run: docker run languagetool-build mvn clean test --quiet
+        run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet
       - name: Tag
         run: echo "::set-env name=DOCKER_TAG::$(echo ${{ github.ref }} | grep -oP '(?<=refs/tags/v).*')"
       - name: Build
