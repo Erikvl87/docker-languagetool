@@ -9,12 +9,12 @@ RUN apt-get update -y \
     locales \
     bash \
     libgomp1 \
-    openjdk-8-jdk-headless \
+    openjdk-11-jdk-headless \
     git \
     maven \
     unzip \
     xmlstarlet \
-    && apt-get clean
+    && apt-get auto-clean -y
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
@@ -29,17 +29,19 @@ WORKDIR /languagetool
 
 RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 
-RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM/4.0.0" -t -v "//x:project/x:properties/x:languagetool.version" pom.xml) && unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_DIST_VERSION}.zip -d /dist
+RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM/4.0.0" -t -v "//x:project/x:properties/x:languagetool.version" pom.xml) 
+	&& unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_DIST_VERSION}.zip -d /dist
 
 RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-buster
 
-RUN apk update \
-    && apk add \
+RUN apt-get update -y \
+    && apt-get install -y \
     bash \
     libgomp \
-    gcompat
+    gcompat \
+	&& apt-get auto-clean -y
 
 ARG LANGUAGETOOL_VERSION
 
