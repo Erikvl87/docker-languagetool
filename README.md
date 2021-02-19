@@ -56,8 +56,8 @@ docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v local/path
 ## Improving the spell checker
 
 > You can improve the spell checker without touching the dictionary. For single words (no spaces), you can add your words to one of these files:
-> * `spelling.txt`: words that the spell checker will ignore and use to generate corrections if someone types a similar word
-> * `ignore.txt`: words that the spell checker will ignore but not use to generate corrections
+> * `spelling.txt`: words that the spell checker will ignore and used to generate corrections if someone types a similar word
+> * `ignore.txt`: words that the spell checker will ignore but not used to generate corrections
 > * `prohibited.txt`: words that should be considered incorrect even though the spell checker would accept them
 
 *Source: [https://dev.languagetool.org/hunspell-support](https://dev.languagetool.org/hunspell-support)*
@@ -97,14 +97,14 @@ services:
         - 8010:8010  # Using default port from the image
     environment:
         - langtool_languageModel=/ngrams  # OPTIONAL: Using ngrams data
-        - Java_Xms=512m  # OPTIONAL: Setting a minimal Java heap size of 512 mib
-        - Java_Xmx=1g  # OPTIONAL: Setting a maximum Java heap size of 1 Gib
+        - Java_Xms=512m  # OPTIONAL: Setting a minimal Java heap size of 512 MiB
+        - Java_Xmx=1g  # OPTIONAL: Setting a maximum Java heap size of 1 GiB
     volumes:
         - /path/to/ngrams/data:/ngrams
 ```
 
 # Usage
-By default this image is configured to listen on port 8010 which deviates from the default port of LanguageTool 8081.
+By default, this image is configured to listen on port 8010 which deviates from the default port of LanguageTool 8081.
 
 An example cURL request:
 ```
