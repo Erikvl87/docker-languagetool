@@ -41,7 +41,7 @@ RUN apt-get update -y \
     bash \
     libgomp \
     gcompat \
-	&& apt-get auto-clean -y
+    && apt-get auto-clean -y
 
 ARG LANGUAGETOOL_VERSION
 
