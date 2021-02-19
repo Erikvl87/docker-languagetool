@@ -8,7 +8,7 @@ done
 
 if [ "$config_injected" = true ] ; then
     echo 'The following configuration is passed to LanguageTool:'
-	echo "$(cat config.properties)"
+    echo "$(cat config.properties)"
 fi
 
 Xms=${Java_Xms:-256m}
