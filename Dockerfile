@@ -1,6 +1,6 @@
 ARG LANGUAGETOOL_VERSION=5.2.3
 
-FROM debian:stretch as build
+FROM debian:buster as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,7 @@ RUN apt-get update -y \
     locales \
     bash \
     libgomp1 \
-    openjdk-8-jdk-headless \
+    openjdk-11-jdk-headless \
     git \
     maven \
     unzip \
@@ -33,13 +33,12 @@ RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM
 
 RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jre-buster
 
-RUN apk update \
-    && apk add \
+RUN apt-get update -y \
+    && apt-get install -y \
     bash \
-    libgomp \
-    gcompat
+	&& apt-get auto-clean -y
 
 ARG LANGUAGETOOL_VERSION
 
@@ -49,7 +48,7 @@ WORKDIR /LanguageTool
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
-RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
+RUN groupadd -r languagetool && useradd -r -g languagetool languagetool
 
 COPY --chown=languagetool start.sh start.sh
 
