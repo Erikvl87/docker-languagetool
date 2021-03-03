@@ -33,22 +33,20 @@ RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM
 
 RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
 
-FROM openjdk:11-jre-buster
+FROM alpine
 
-RUN apt-get update -y \
-    && apt-get install -y \
+RUN apk update \
+    && apk add \
     bash \
-	&& apt-get auto-clean -y
+    openjdk11-jre-headless
 
-ARG LANGUAGETOOL_VERSION
+RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
-COPY --from=build /dist .
+COPY --chown=languagetool --from=build /dist .
 
 WORKDIR /LanguageTool
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
-
-RUN groupadd -r languagetool && useradd -r -g languagetool languagetool
 
 COPY --chown=languagetool start.sh start.sh
 
