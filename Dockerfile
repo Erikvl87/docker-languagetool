@@ -38,6 +38,7 @@ FROM alpine
 RUN apk update \
     && apk add \
     bash \
+    libstdc++ \
     openjdk11-jre-headless
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
