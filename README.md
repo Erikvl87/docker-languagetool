@@ -46,11 +46,28 @@ docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms
 
 *Source: [https://dev.languagetool.org/finding-errors-using-n-gram-data](https://dev.languagetool.org/finding-errors-using-n-gram-data)*
 
-[Download](http://languagetool.org/download/ngram-data/) the n-gram dataset(s) to your local machine and mount the local n-gram data directory to the `/ngrams` directory in the Docker container [using the `-v` configuration](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) and set the `languageModel` configuration to the `/ngrams` folder.
+[Download](http://languagetool.org/download/ngram-data/) the n-gram dataset(s) onto your local machine and unzip them into a local ngrams directory:
+
+```
+home/
+├─ john/
+│  ├─ ngrams/
+│  │  ├─ en/
+│  │  │  ├─ 1grams/
+│  │  │  ├─ 2grams/
+│  │  │  ├─ 3grams/
+│  │  ├─ nl/
+│  │  │  ├─ 1grams/
+│  │  │  ├─ 2grams/
+│  │  │  ├─ 3grams/
+```
+
+Mount the local ngrams directory to the `/ngrams` directory in the Docker container [using the `-v` configuration](https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only) and set the `languageModel` configuration to the `/ngrams` folder.
 
 An example startup configuration:
+
 ```
-docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v local/path/to/ngrams:/ngrams erikvl87/languagetool
+docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v home/john/ngrams:/ngrams erikvl87/languagetool
 ```
 
 ## Improving the spell checker
