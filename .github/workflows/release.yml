@@ -21,7 +21,7 @@ jobs:
       - name: Build
         run: docker build --target=build -t languagetool-build .
       - name: Test
-        run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet
+        run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet --errors
       - name: Tag
         run: |
           echo 'DOCKER_TAG<<EOF' >> $GITHUB_ENV
