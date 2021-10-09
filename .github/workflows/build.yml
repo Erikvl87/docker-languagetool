@@ -2,6 +2,8 @@ name: Build
 
 on:
   push:
+    branches: 
+      - '**'
     tags-ignore: # Exclude the release tags since they trigger a dedicated build action.
       - 'v[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+-dockerupdate-[0-9]+'
