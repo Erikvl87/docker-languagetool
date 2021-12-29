@@ -43,7 +43,7 @@ hg init
 ####################
 cd /BridJ
 ./BuildNative
-mvn clean install -DskipTests -Dmaven.install.skip=true -e
+mvn clean install -DskipTests -Dmaven.install.skip=true -Dmaven.javadoc.skip=true -e
 
 ####################
 ## Postprocessing ##
