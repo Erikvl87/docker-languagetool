@@ -37,7 +37,7 @@ RUN bash -c "./bridj.sh"
 RUN bash -c "./hunspell.sh"
 WORKDIR /languagetool
 
-FROM alpine
+FROM alpine:3.15.0
 
 RUN apk update \
     && apk add \
