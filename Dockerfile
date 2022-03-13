@@ -39,8 +39,7 @@ WORKDIR /languagetool
 
 FROM alpine:3.15.0
 
-RUN apk update \
-    && apk add \
+RUN apk add --no-cache \
     bash \
     libstdc++ \
     openjdk11-jre-headless
