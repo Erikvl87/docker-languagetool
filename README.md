@@ -8,7 +8,8 @@ This repository contains a Dockerfile to create a Docker image for [LanguageTool
 # Setup
 
 ## Setup using Docker Hub
-```
+
+```sh
 docker pull erikvl87/languagetool
 docker run --rm -p 8010:8010 erikvl87/languagetool
 ```
@@ -17,7 +18,8 @@ This will pull the `latest` tag from Docker Hub. Optionally, specify a [tag](htt
 
 ## Setup using the Dockerfile
 This approach could be used when you plan to make changes to the `Dockerfile`.
-```
+
+```sh
 git clone https://github.com/Erikvl87/docker-languagetool.git --config core.autocrlf=input
 docker build -t languagetool .
 docker run --rm -it -p 8010:8010 languagetool
@@ -29,7 +31,8 @@ docker run --rm -it -p 8010:8010 languagetool
 LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) `Java_Xms` and `Java_Xmx`.
 
 An example startup configuration:
-```
+
+```sh
 docker run --rm -it -p 8010:8010 -e Java_Xms=512m -e Java_Xmx=2g erikvl87/languagetool
 ```
 
@@ -37,7 +40,8 @@ docker run --rm -it -p 8010:8010 -e Java_Xms=512m -e Java_Xmx=2g erikvl87/langua
 You are able to use the [HTTPServerConfig](https://languagetool.org/development/api/org/languagetool/server/HTTPServerConfig.html) configuration options by prefixing the fields with `langtool_` and setting them as [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
 
 An example startup configuration:
-```
+
+```sh
 docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms=1g -e Java_Xmx=2g erikvl87/languagetool
 ```
 
@@ -66,7 +70,7 @@ Mount the local ngrams directory to the `/ngrams` directory in the Docker contai
 
 An example startup configuration:
 
-```
+```sh
 docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v home/john/ngrams:/ngrams erikvl87/languagetool
 ```
 
@@ -80,7 +84,8 @@ docker run --rm -it -p 8010:8010 -e langtool_languageModel=/ngrams -v home/john/
 *Source: [https://dev.languagetool.org/hunspell-support](https://dev.languagetool.org/hunspell-support)*
 
 The following `Dockerfile` contains an example on how to add words to `spelling.txt`. It assumes you have your own list of words in `en_spelling_additions.txt` next to the `Dockerfile`.
-```
+
+```dockerfile
 FROM erikvl87/languagetool
 
 # Improving the spell checker
@@ -92,7 +97,8 @@ USER languagetool
 ```
 
 You can build & run the custom Dockerfile with the following two commands:
-```
+
+```sh
 docker build -t languagetool-custom .
 docker run --rm -it -p 8010:8010 languagetool-custom
 ```
@@ -124,7 +130,8 @@ services:
 By default this image is configured to listen on port 8010 which deviates from the default port of LanguageTool 8081.
 
 An example cURL request:
-```
+
+```sh
 curl --data "language=en-US&text=a simple test" http://localhost:8010/v2/check
 ```
 
