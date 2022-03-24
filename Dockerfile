@@ -41,6 +41,7 @@ FROM alpine:3.15.2
 
 RUN apk add --no-cache \
     bash \
+    curl \
     libstdc++ \
     openjdk11-jre-headless
 
@@ -57,6 +58,8 @@ COPY --chown=languagetool start.sh start.sh
 COPY --chown=languagetool config.properties config.properties
 
 USER languagetool
+
+HEALTHCHECK --timeout=10s --start-period=5s CMD curl --fail --data "language=en-US&text=a simple test" http://localhost:8010/v2/check || exit 1
 
 CMD [ "bash", "start.sh" ]
 
