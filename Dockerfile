@@ -37,7 +37,7 @@ RUN bash -c "./bridj.sh"
 RUN bash -c "./hunspell.sh"
 WORKDIR /languagetool
 
-FROM alpine:3.15.3
+FROM alpine:3.15.4
 
 RUN apk add --no-cache \
     bash \
