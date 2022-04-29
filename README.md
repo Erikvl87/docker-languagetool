@@ -136,3 +136,8 @@ curl --data "language=en-US&text=a simple test" http://localhost:8010/v2/check
 ```
 
 Please refer to the official LanguageTool documentation for further usage instructions.
+
+# Known issues & workarounds
+
+If you experience problems when connecting local server to the official Firefox extension, see [cors-workaround](cors-workaround/).
+

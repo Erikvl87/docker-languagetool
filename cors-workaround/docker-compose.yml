@@ -1,0 +1,18 @@
+version: "3"
+services:
+  languagetool:
+    image: erikvl87/languagetool
+    container_name: languagetool
+    ports:
+        - "8010"
+    environment:
+        - langtool_languageModel=/ngrams  # OPTIONAL: Using ngrams data
+        - Java_Xms=512m  # OPTIONAL: Setting a minimal Java heap size of 512 mib
+        - Java_Xmx=1g  # OPTIONAL: Setting a maximum Java heap size of 1 Gib
+    volumes:
+        - /path/to/ngrams:/ngrams
+  cors:
+    build: nginx/.
+    container_name: cors
+    ports:
+      - "8081"
