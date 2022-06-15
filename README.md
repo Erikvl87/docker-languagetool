@@ -107,24 +107,7 @@ You can add words to other languages by changing the `en` language tag in the ta
 
 # Docker Compose
 
-This image can also be used with [Docker Compose](https://docs.docker.com/compose/). An example `docker-compose.yml` would be:
-
-```yaml
-version: "3"
-
-services:
-  languagetool:
-    image: erikvl87/languagetool
-    container_name: languagetool
-    ports:
-        - 8010:8010  # Using default port from the image
-    environment:
-        - langtool_languageModel=/ngrams  # OPTIONAL: Using ngrams data
-        - Java_Xms=512m  # OPTIONAL: Setting a minimal Java heap size of 512 mib
-        - Java_Xmx=1g  # OPTIONAL: Setting a maximum Java heap size of 1 Gib
-    volumes:
-        - /path/to/ngrams/data:/ngrams
-```
+This image can also be used with [Docker Compose](https://docs.docker.com/compose/). An example [`docker-compose.yml`](docker-compose.yml) is located at the root of this project.
 
 # Usage
 By default this image is configured to listen on port 8010 which deviates from the default port of LanguageTool 8081.
