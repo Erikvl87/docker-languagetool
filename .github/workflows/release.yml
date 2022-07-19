@@ -1,6 +1,13 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+        skip_tests:
+          type: boolean
+          description: Skip the tests
+          required: true
+          default: false
   push:
     tags:
       - 'v[0-9]+.[0-9]+'
@@ -21,6 +28,7 @@ jobs:
       - name: Build
         run: docker build --target=build -t languagetool-build .
       - name: Test
+        if:  ${{ inputs.skip_tests == null || inputs.skip_tests == false }} 
         run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet --errors
       - name: Tag
         run: |
