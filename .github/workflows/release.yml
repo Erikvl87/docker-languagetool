@@ -29,7 +29,7 @@ jobs:
         run: docker build --target=build -t languagetool-build .
       - name: Test
         if:  ${{ inputs.skip_tests == null || inputs.skip_tests == false }} 
-        run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet --errors
+        run: docker run languagetool-build mvn --projects languagetool-server clean test --also-make --errors
       - name: Tag
         run: |
           echo 'DOCKER_TAG<<EOF' >> $GITHUB_ENV

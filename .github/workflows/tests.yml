@@ -22,4 +22,9 @@ jobs:
     - name: Download
       run: docker build --target=build -t languagetool-build .
     - name: Run tests
-      run: docker run languagetool-build mvn --projects languagetool-standalone clean test --also-make --quiet --errors
+      run: docker run languagetool-build mvn --projects languagetool-server clean test --also-make --errors
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: surefire-reports
+        path: /languagetool/languagetool-server/target/surefire-reports/
