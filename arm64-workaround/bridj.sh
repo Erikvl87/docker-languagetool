@@ -28,8 +28,12 @@ apt-get clean
 ####################
 ##  BridJ setup   ##
 ####################
-while ! git clone --depth 1 https://github.com/nativelibs4java/BridJ /BridJ; do sleep 5; done
+mkdir /BridJ
 cd /BridJ
+git init
+git remote add origin https://github.com/nativelibs4java/BridJ
+git fetch --depth 1 origin 373c03447df44b5a5508e94fa897369b41b18f48
+git checkout FETCH_HEAD
 git apply ../bridj.patch
 wget https://dyncall.org/r1.1/dyncall-1.1.tar.gz
 tar xf dyncall-1.1.tar.gz
