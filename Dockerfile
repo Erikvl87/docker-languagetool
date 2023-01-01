@@ -42,8 +42,12 @@ FROM alpine:3.17.0
 RUN apk add --no-cache \
     bash \
     curl \
+    libc6-compat \
     libstdc++ \
     openjdk11-jre-headless
+
+# https://github.com/Erikvl87/docker-languagetool/issues/60
+RUN ln -s /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
