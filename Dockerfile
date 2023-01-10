@@ -37,6 +37,8 @@ RUN bash -c "./bridj.sh"
 RUN bash -c "./hunspell.sh"
 WORKDIR /languagetool
 
+# Note: When changing the base image, verify that the hunspell.sh workaround is
+# downloading the matching version of `libhunspell`. The URL may need to change.
 FROM alpine:3.17.1
 
 RUN apk add --no-cache \
