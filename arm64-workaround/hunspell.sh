@@ -11,7 +11,7 @@ if [[ $(dpkg --print-architecture) != "arm64" ]]; then
     exit;
 fi
 
-echo "Applying arm64 workaround."
+echo "Applying arm64 workaround for Hunspell."
 
 # Make `wget` more robust by passing retry flags.
 alias wget="wget --retry-connrefused --waitretry=30 --read-timeout=30 --timeout=30 --tries=20"
@@ -22,8 +22,9 @@ alias wget="wget --retry-connrefused --waitretry=30 --read-timeout=30 --timeout=
 ##############################
 mkdir /hunspell
 cd /hunspell
-wget http://dl-cdn.alpinelinux.org/alpine/v3.17/main/aarch64/libhunspell-1.7.1-r0.apk
-tar --warning=no-unknown-keyword -xzf libhunspell-1.7.1-r0.apk
-mkdir -p /hunspell/org/bridj/lib/linux_x64/
-mv /hunspell/usr/lib/libhunspell-1.7.so.0.0.1 /hunspell/org/bridj/lib/linux_x64/libhunspell.so
-zip /dist/LanguageTool/libs/hunspell.jar org/bridj/lib/linux_x64/libhunspell.so
+wget https://dl-cdn.alpinelinux.org/alpine/v3.16/main/aarch64/libhunspell-1.7.0-r1.apk
+tar --warning=no-unknown-keyword -xzf libhunspell-1.7.0-r1.apk
+mkdir -p /hunspell/org/bridj/lib/linux-aarch64/
+mv /hunspell/usr/lib/libhunspell-1.7.so.0.0.1 /hunspell/org/bridj/lib/linux-aarch64/libhunspell.so
+cd /hunspell/org/bridj/lib/
+zip /dist/LanguageTool/libs/hunspell.jar linux-aarch64/libhunspell.so
