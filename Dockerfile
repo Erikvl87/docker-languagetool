@@ -32,6 +32,7 @@ ENV LANG en_US.UTF-8
 ARG LANGUAGETOOL_VERSION
 RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGETOOL_VERSION}
 WORKDIR /languagetool
+RUN export MAVEN_OPTS="-Xmx2G"
 RUN ["mvn", "--projects", "languagetool-standalone", "--also-make", "package", "-DskipTests", "--quiet"]
 RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM/4.0.0" -t -v "//x:project/x:properties/x:revision" pom.xml) && unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_DIST_VERSION}.zip -d /dist
 RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
@@ -53,12 +54,19 @@ WORKDIR /languagetool
 # downloading the matching version of `libhunspell`. The URL may need to change.
 FROM alpine:3.17.3
 
+ARG TARGETPLATFORM
+
 RUN apk add --no-cache \
     bash \
     curl \
     libc6-compat \
-    libstdc++ \
-    openjdk11-jre-headless
+    libstdc++ 
+
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then \
+       apk add --no-cache openjdk8-jre; \
+    else \
+       apk add --no-cache openjdk11-jre-headless; \
+    fi
 
 # https://github.com/Erikvl87/docker-languagetool/issues/60
 RUN ln -s /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2
