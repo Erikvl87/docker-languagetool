@@ -1,6 +1,6 @@
 ARG LANGUAGETOOL_VERSION=6.2
 
-FROM debian:bullseye as build
+FROM debian:bookworm as build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +9,7 @@ RUN apt-get update -y \
     locales \
     bash \
     libgomp1 \
-    openjdk-11-jdk-headless \
+    openjdk-17-jdk-headless \
     git \
     maven \
     unzip \

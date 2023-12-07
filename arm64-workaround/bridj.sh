@@ -35,7 +35,7 @@ mvn clean install -DskipTests -Dmaven.javadoc.skip=true -e
 ##  BridJ build   ##
 ####################
 cd /BridJ
-./BuildNative -DFORCE_JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
+./BuildNative -DFORCE_JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64
 
 ####################
 ## Postprocessing ##
