@@ -1,4 +1,4 @@
-ARG LANGUAGETOOL_VERSION=6.2
+ARG LANGUAGETOOL_VERSION=6.3-branch
 
 FROM debian:bookworm as build
 
