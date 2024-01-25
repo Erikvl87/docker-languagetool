@@ -66,7 +66,7 @@ home/
 │  │  │  ├─ 3grams/
 ```
 
-Mount the local ngrams directory to the `/ngrams` directory in the Docker container [using the `-v` configuration]([https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only](https://docs.docker.com/engine/reference/commandline/container_run/#read-only)) and set the `languageModel` configuration to the `/ngrams` folder.
+Mount the local ngrams directory to the `/ngrams` directory in the Docker container [using the `-v` configuration](https://docs.docker.com/engine/reference/commandline/container_run/#read-only) and set the `languageModel` configuration to the `/ngrams` folder.
 
 An example startup configuration:
 
