@@ -34,5 +34,6 @@ jobs:
         args: --file=Dockerfile
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3
+      continue-on-error: true # https://github.com/Erikvl87/docker-languagetool/issues/90
       with:
         sarif_file: snyk.sarif
