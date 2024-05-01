@@ -14,3 +14,4 @@ services:
       - Java_Xmx=1g                      # OPTIONAL: Setting a maximum Java heap size of 1 Gib
     volumes:
       - /path/to/ngrams/data:/ngrams     # OPTIONAL: The location of ngrams data on the local machine
+      - /path/to/logback.xml:/LanguageTool/logback.xml:ro  # OPTIONAL: Overwrite the logging configuration

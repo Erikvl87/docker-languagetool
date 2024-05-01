@@ -7,11 +7,30 @@ do
 done
 
 if [ "$config_injected" = true ] ; then
-    echo 'The following configuration is passed to LanguageTool:'
-	echo "$(cat config.properties)"
+  echo 'The following configuration is passed to LanguageTool:'
+  cat config.properties
 fi
 
 Xms=${Java_Xms:-256m}
 Xmx=${Java_Xmx:-512m}
 
-exec java -Xms$Xms -Xmx$Xmx -cp languagetool-server.jar org.languagetool.server.HTTPServer --port 8010 --public --allow-origin '*' --config config.properties
+PRIO_ARGS=(  
+  "-Xms$Xms"
+  "-Xmx$Xmx"
+)
+
+if [ -f /LanguageTool/logback.xml ] ; then
+  PRIO_ARGS+=("-Dlogback.configurationFile=/LanguageTool/logback.xml")
+fi
+
+LT_ARGS=(
+  -cp languagetool-server.jar
+  org.languagetool.server.HTTPServer
+  --port 8010
+  --public
+  --allow-origin '*'
+  --config config.properties
+)
+
+set -x
+exec java "${PRIO_ARGS[@]}" "${LT_ARGS[@]}"

@@ -45,6 +45,24 @@ An example startup configuration:
 docker run --rm -it -p 8010:8010 -e langtool_pipelinePrewarming=true -e Java_Xms=1g -e Java_Xmx=2g erikvl87/languagetool
 ```
 
+## Overwrite logging configuration
+To overwrite the [default LanguageTool logback.xml logging configuration](https://github.com/languagetool-org/languagetool/blob/master/languagetool-server/src/main/resources/logback.xml), create a new `logback.xml` file and mount it into the container.
+
+For example, create the following `logback.xml` file:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <logger name="org.languagetool" level="ERROR"/>
+</configuration>
+```
+
+An example startup configuration:
+
+```sh
+docker run --rm -it -p 8010:8010 -v /home/john/logback.xml:/LanguageTool/logback.xml erikvl87/languagetool
+```
+
+
 ## Using n-gram datasets
 > LanguageTool can make use of large n-gram data sets to detect errors with words that are often confused, like __their__ and __there__.
 
