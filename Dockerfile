@@ -29,6 +29,7 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 ENV LANG en_US.UTF-8
 
+
 ARG LANGUAGETOOL_VERSION
 RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGETOOL_VERSION}
 WORKDIR /languagetool
@@ -47,6 +48,9 @@ COPY arm64-workaround/hunspell.sh arm64-workaround/hunspell.sh
 RUN chmod +x arm64-workaround/hunspell.sh
 RUN bash -c "arm64-workaround/hunspell.sh"
 
+WORKDIR /fastText
+RUN wget https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
+
 WORKDIR /languagetool
 
 # Note: When changing the base image, verify that the hunspell.sh workaround is
@@ -58,11 +62,16 @@ RUN apk add --no-cache \
     curl \
     libc6-compat \
     libstdc++ \
-    openjdk11-jre-headless
+    openjdk11-jre-headless \
+    fasttext
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
 COPY --chown=languagetool --from=build /dist .
+
+WORKDIR /fastText
+COPY --chown=languagetool --from=build /fastText .
+
 
 WORKDIR /LanguageTool
 
