@@ -51,7 +51,7 @@ WORKDIR /languagetool
 
 # Note: When changing the base image, verify that the hunspell.sh workaround is
 # downloading the matching version of `libhunspell`. The URL may need to change.
-FROM alpine:3.19.1
+FROM alpine:3.20.0
 
 RUN apk add --no-cache \
     bash \
