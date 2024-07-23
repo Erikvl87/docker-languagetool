@@ -22,7 +22,7 @@ alias wget="wget --retry-connrefused --waitretry=30 --read-timeout=30 --timeout=
 ##############################
 mkdir /hunspell
 cd /hunspell
-wget https://dl-cdn.alpinelinux.org/alpine/v3.19/main/aarch64/libhunspell-1.7.2-r4.apk
+wget https://dl-cdn.alpinelinux.org/alpine/v3.20/main/aarch64/libhunspell-1.7.2-r4.apk
 tar --warning=no-unknown-keyword -xzf libhunspell-1.7.2-r4.apk
 mkdir -p /hunspell/org/bridj/lib/linux-aarch64/
 mv /hunspell/usr/lib/libhunspell-1.7.so.0.0.1 /hunspell/org/bridj/lib/linux-aarch64/libhunspell.so
