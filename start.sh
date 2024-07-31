@@ -6,6 +6,9 @@ do
   echo "${varname#'langtool_'}="${!varname} >> config.properties
 done
 
+echo "fasttextModel=/fastText/lid.176.bin" >> config.properties
+echo "fasttextBinary=$(which fasttext)" >> config.properties
+
 if [ "$config_injected" = true ] ; then
   echo 'The following configuration is passed to LanguageTool:'
   cat config.properties
