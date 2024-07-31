@@ -1,9 +1,22 @@
 #!/bin/bash
 
+config_injected=false
+
 for varname in ${!langtool_*}
 do
+  key="${varname#'langtool_'}"
+  value="${!varname}"
+
+  if [ "$key" = "fasttextModel" ]; then
+    echo "Error: fasttextModel is managed by the container and must not be overridden via langtool_fasttextModel." >&2
+    exit 1
+  elif [ "$key" = "fasttextBinary" ]; then
+    echo "Error: fasttextBinary is managed by the container and must not be overridden via langtool_fasttextBinary." >&2
+    exit 1
+  fi
+
   config_injected=true
-  echo "${varname#'langtool_'}="${!varname} >> config.properties
+  echo "$key=$value" >> config.properties
 done
 
 if [ "$config_injected" = true ] ; then

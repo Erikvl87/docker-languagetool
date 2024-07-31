@@ -72,6 +72,7 @@ FROM alpine:3.23.2
 RUN apk add --no-cache \
     bash \
     curl \
+    fasttext \
     libc6-compat \
     libstdc++ \
     openjdk17-jre-headless
@@ -84,8 +85,16 @@ WORKDIR /LanguageTool
 
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
-COPY --chown=languagetool:languagetool start.sh start.sh
-COPY --chown=languagetool:languagetool config.properties config.properties
+COPY --chown=languagetool:languagetool start.sh config.properties ./
+
+RUN install -d -m 755 /fastText \
+    && curl -L https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin -o /fastText/lid.176.bin \
+    && chown -R languagetool:languagetool /fastText
+
+RUN set -eux; \
+    echo "fasttextModel=/fastText/lid.176.bin" >> config.properties; \
+    echo "fasttextBinary=$(command -v fasttext)" >> config.properties; \
+    chown languagetool:languagetool config.properties
 
 USER languagetool
 
