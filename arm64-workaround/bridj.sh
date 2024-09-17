@@ -20,6 +20,8 @@ alias wget="wget --retry-connrefused --waitretry=30 --read-timeout=30 --timeout=
 ##  BridJ setup   ##
 ####################
 git clone http://github.com/nativelibs4java/BridJ.git
+cd BridJ && git checkout 365792c16a4b5cbc7449e702a234d4e4494606a4
+cd /
 wget https://dyncall.org/r1.4/dyncall-1.4.tar.gz
 tar xf dyncall-1.4.tar.gz
 rm dyncall-1.4.tar.gz
