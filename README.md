@@ -28,7 +28,7 @@ docker run --rm -it -p 8010:8010 languagetool
 # Configuration
 
 ## Java heap size
-LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file) `Java_Xms` and `Java_Xmx`.
+LanguageTool will be started with a minimal heap size (`-Xms`) of `256m` and a maximum (`-Xmx`) of `512m`. You can overwrite these defaults by setting the [environment variables](https://docs.docker.com/reference/cli/docker/container/run/#env) `Java_Xms` and `Java_Xmx`.
 
 An example startup configuration:
 
@@ -37,7 +37,7 @@ docker run --rm -it -p 8010:8010 -e Java_Xms=512m -e Java_Xmx=2g erikvl87/langua
 ```
 
 ## LanguageTool HTTPServerConfig
-You are able to use the [HTTPServerConfig](https://languagetool.org/development/api/org/languagetool/server/HTTPServerConfig.html) configuration options by prefixing the fields with `langtool_` and setting them as [environment variables](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file).
+You are able to use the [HTTPServerConfig](https://languagetool.org/development/api/org/languagetool/server/HTTPServerConfig.html) configuration options by prefixing the fields with `langtool_` and setting them as [environment variables](https://docs.docker.com/reference/cli/docker/container/run/#env).
 
 An example startup configuration:
 
