@@ -58,7 +58,7 @@ RUN apk add --no-cache \
     curl \
     libc6-compat \
     libstdc++ \
-    openjdk11-jre-headless
+    openjdk17-jre-headless
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
