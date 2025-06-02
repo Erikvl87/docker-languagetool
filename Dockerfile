@@ -9,12 +9,10 @@ RUN apt-get update -y \
     locales \
     bash \
     libgomp1 \
-    openjdk-17-jdk-headless \
     git \
     maven \
     unzip \
     xmlstarlet \
-
     # packages required for arm64-workaround
     build-essential \
     cmake \
@@ -23,6 +21,10 @@ RUN apt-get update -y \
     wget \
     zip \
     && apt-get clean
+
+RUN wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
+RUN dpkg -i jdk-21_linux-x64_bin.deb
+RUN java -version    
 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
@@ -58,7 +60,7 @@ RUN apk add --no-cache \
     curl \
     libc6-compat \
     libstdc++ \
-    openjdk17-jre-headless
+    openjdk21-jre-headless
 
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
