@@ -31,19 +31,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: erikvl87/languagetool
-        args: --file=Dockerfile
-      # Replace any "undefined" security severity values with 0. The undefined value is used in the case
-      # of license-related findings, which do not do not indicate a security vulnerability.
-      # See  https://github.com/Erikvl87/docker-languagetool/issues/90 and https://github.com/github/codeql-action/issues/2187 for more context.
-    - name: Post-process sarif output for security severities set to "undefined"
-      run: |
-        sed -i 's/"security-severity": "undefined"/"security-severity": "0"/g' snyk.sarif
-      # Replace any "null" security severity values with 0. The undefined value is used in the case
-      # the NVD CVSS Score is not available.
-      # See  https://github.com/Erikvl87/docker-languagetool/issues/90 and https://github.com/github/codeql-action/issues/2187 for more context.
-    - name: Post-process sarif output for security severities set to "null"
-      run: |
-        sed -i 's/"security-severity": "null"/"security-severity": "0"/g' snyk.sarif
+        args: --file=Dockerfile --exclude-app-vulns
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3
       with:
