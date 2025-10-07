@@ -25,13 +25,16 @@ jobs:
       continue-on-error: true
       uses: snyk/actions/docker@master
       env:
-        # In order to use the Snyk Action you will need to have a Snyk API token.
-        # More details in https://github.com/snyk/actions#getting-your-snyk-token
-        # or you can signup for free at https://snyk.io/login
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: erikvl87/languagetool
         args: --file=Dockerfile --exclude-app-vulns
+        sarif: true
+    - name: Normalize SARIF severities (fix null security-severity)
+      run: |
+        sudo apt-get update -y >/dev/null 2>&1
+        sudo apt-get install -y jq >/dev/null 2>&1
+        jq '(.runs[]?.tool.driver.rules // []) |= map( if (.properties? | has("security-severity") | not) or (.properties."security-severity"==null) or (.properties."security-severity"=="undefined") or (.properties."security-severity"=="null") then (.properties."security-severity"="0.0") else . end )' snyk.sarif > _s && mv _s snyk.sarif
     - name: Upload result to GitHub Code Scanning
       uses: github/codeql-action/upload-sarif@v3
       with:
