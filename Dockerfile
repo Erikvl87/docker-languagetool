@@ -74,7 +74,7 @@ COPY --chown=languagetool config.properties config.properties
 
 USER languagetool
 
-HEALTHCHECK --timeout=10s --start-period=5s CMD curl --fail --data "language=en-US&text=a simple test" http://localhost:8010/v2/check || exit 1
+HEALTHCHECK --timeout=10s --start-period=5s CMD curl --fail http://localhost:8010/v2/healthcheck || exit 1
 
 CMD [ "bash", "start.sh" ]
 
