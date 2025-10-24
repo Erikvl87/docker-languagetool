@@ -17,4 +17,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build Docker image
-      run: docker build .
+      run: docker build . -t languagetool:test
+
+    - name: Run Docker container
+      run: docker run -d --rm --name languagetool-test languagetool:test
+
+    - name: Wait for container to be healthy
+      run: |
+        for i in {1..10}; do
+          status=$(docker inspect --format='{{.State.Health.Status}}' languagetool-test)
+          echo "Health status: $status"
+          if [ "$status" = "healthy" ]; then
+            exit 0
+          fi
+          sleep 3
+        done
+        echo "Container did not become healthy"
+        docker logs languagetool-test
+        exit 1      
+    
