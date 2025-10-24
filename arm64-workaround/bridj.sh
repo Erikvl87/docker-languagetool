@@ -19,6 +19,21 @@ alias wget="wget --retry-connrefused --waitretry=30 --read-timeout=30 --timeout=
 ####################
 ##  BridJ setup   ##
 ####################
+
+# Workaround to make com.nativelibs4java:nativelibs4java-parent:pom:1.10-SNAPSHOT available as it is missing from Maven Central
+# Requirement for BridJ build
+git clone https://github.com/nativelibs4java/nativelibs4java.git
+cd nativelibs4java && git checkout 1298fa36781605332746c42e2e3b9685aac1cdee
+mvn clean install -DskipTests
+cd /
+
+# Workaround to make com.nativelibs4java:maven-velocity-plugin:jar:0.10-SNAPSHOT available as it is missing from Maven Central
+# Requirement for BridJ build
+git clone https://github.com/nativelibs4java/maven-velocity-plugin
+cd maven-velocity-plugin && git checkout 9762c6d95c6440d8c49d0550720986f7acd3c489
+mvn clean install -DskipTests
+cd /
+
 git clone http://github.com/nativelibs4java/BridJ.git
 cd BridJ && git checkout 365792c16a4b5cbc7449e702a234d4e4494606a4
 cd /
