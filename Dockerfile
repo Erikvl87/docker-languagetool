@@ -65,7 +65,9 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 
 WORKDIR /languagetool
 
-FROM alpine:3.22.2
+# Note: When changing the base image, verify that the hunspell.sh workaround is
+# downloading the matching version of `libhunspell`. The URL may need to change.
+FROM alpine:3.23.2
 
 RUN apk add --no-cache \
     bash \
@@ -80,8 +82,6 @@ COPY --chown=languagetool:languagetool --from=build /dist/LanguageTool /Language
 
 WORKDIR /LanguageTool
 
-# Note: When changing the base image, verify that the hunspell.sh workaround is
-# downloading the matching version of `libhunspell`. The URL may need to change.
 RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
 COPY --chown=languagetool:languagetool start.sh start.sh
