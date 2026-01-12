@@ -54,20 +54,18 @@ RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUA
 # https://github.com/languagetool-org/languagetool/issues/4543
 WORKDIR /
 COPY --link --chmod=755 arm64-workaround/bridj.sh arm64-workaround/bridj.sh
-COPY --link --chmod=755 arm64-workaround/hunspell.sh arm64-workaround/hunspell.sh
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
-        echo "Applying ARM64 workarounds..." && \
-        bash arm64-workaround/bridj.sh && \
-        bash arm64-workaround/hunspell.sh; \
+        echo "Applying ARM64 workaround for BridJ..." && \
+        bash arm64-workaround/bridj.sh; \
     else \
         echo "Skipping ARM64 workarounds for $TARGETARCH"; \
     fi
 
 WORKDIR /languagetool
 
-# Note: When changing the base image, verify that the hunspell.sh workaround is
-# downloading the matching version of `libhunspell`. The URL may need to change.
 FROM alpine:3.23.2
+
+ARG TARGETARCH
 
 RUN apk add --no-cache \
     bash \
@@ -77,9 +75,26 @@ RUN apk add --no-cache \
     libstdc++ \
     openjdk17-jre-headless
 
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        apk add --no-cache hunspell zip; \
+    fi
+
 RUN addgroup -S languagetool && adduser -S languagetool -G languagetool
 
 COPY --chown=languagetool:languagetool --from=build /dist/LanguageTool /LanguageTool
+
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    echo "Applying ARM64 workaround for Hunspell..."; \
+    HUNSPELL_SRC=$(find /usr/lib -name 'libhunspell-*.so*' -type f | head -n 1); \
+        if [ -z "$HUNSPELL_SRC" ]; then \
+            echo "Unable to locate hunspell shared library in /usr/lib"; \
+            exit 1; \
+        fi; \
+        mkdir -p /tmp/hunspell/linux-aarch64; \
+        cp "$HUNSPELL_SRC" /tmp/hunspell/linux-aarch64/libhunspell.so; \
+        (cd /tmp/hunspell && zip /LanguageTool/libs/hunspell.jar linux-aarch64/libhunspell.so); \
+        rm -rf /tmp/hunspell; \
+    fi
 
 WORKDIR /LanguageTool
 
