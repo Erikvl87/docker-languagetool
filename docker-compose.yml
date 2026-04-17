@@ -6,6 +6,7 @@ services:
   languagetool:
     image: erikvl87/languagetool
     container_name: languagetool
+    restart: always
     ports:
       - 8010:8010                        # Using default port from the image
     environment:
@@ -15,3 +16,4 @@ services:
     volumes:
       - /path/to/ngrams/data:/ngrams     # OPTIONAL: The location of ngrams data on the local machine
       - /path/to/logback.xml:/LanguageTool/logback.xml:ro  # OPTIONAL: Overwrite the logging configuration
+
