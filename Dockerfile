@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-ARG LANGUAGETOOL_VERSION=6.7
+ARG LANGUAGETOOL_VERSION=6.8
 ARG TARGETARCH
 
 FROM debian:bookworm AS build
