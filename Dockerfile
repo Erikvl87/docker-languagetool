@@ -63,7 +63,7 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 
 WORKDIR /languagetool
 
-FROM alpine:3.24.0
+FROM alpine:3.24.1
 
 ARG TARGETARCH
 
