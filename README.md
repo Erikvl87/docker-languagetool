@@ -145,7 +145,7 @@ Please refer to the official LanguageTool documentation for further usage instru
 
 Please report vulnerabilities privately, not in a public issue. See [SECURITY.md](SECURITY.md) for how to report, which tags get fixes, and what is in scope.
 
-Every pull request, every push to `main`, and a weekly scheduled run scan the image with [Grype](https://github.com/anchore/grype) ([workflow runs](https://github.com/Erikvl87/docker-languagetool/actions/workflows/scan.yml)). The weekly run also scans the published `latest` image on Docker Hub. A pull request fails the scan when the image has a HIGH or CRITICAL vulnerability that has a fixed version available.
+Pull requests and pushes to `main` that change more than documentation, and a weekly scheduled run, scan the image with [Grype](https://github.com/anchore/grype) ([workflow runs](https://github.com/Erikvl87/docker-languagetool/actions/workflows/scan.yml)). The weekly run also scans the published `latest` image on Docker Hub. A pull request fails the scan when the image has a HIGH or CRITICAL vulnerability that has a fixed version available.
 
 # Known issues & workarounds 
  
