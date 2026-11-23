@@ -14,16 +14,19 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+-dockerupdate-[0-9]+'
 
+permissions:
+  contents: read
+
 jobs:
   tests:
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
     - name: Download
       run: docker build --target=build -t languagetool-build .
     - name: Run tests
       run: docker run languagetool-build mvn --projects languagetool-server clean test --also-make --errors
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       if: failure()
       with:
         name: surefire-reports
