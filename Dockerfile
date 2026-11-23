@@ -2,7 +2,10 @@
 ARG LANGUAGETOOL_VERSION=6.8
 ARG TARGETARCH
 
-FROM debian:bookworm@sha256:268fb24c39bca92d326dd83ea3abebe4a3f7751c804ffef23bb6d857dd343ff8 AS build
+# The build stage runs on the build machine's platform. LanguageTool is Java
+# bytecode, so one build serves the images for every target platform, and
+# arm64 images do not have to compile LanguageTool under emulation.
+FROM --platform=$BUILDPLATFORM debian:bookworm@sha256:268fb24c39bca92d326dd83ea3abebe4a3f7751c804ffef23bb6d857dd343ff8 AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
