@@ -107,8 +107,11 @@ RUN mkdir /nonexistent && touch /nonexistent/.languagetool.cfg
 
 COPY --chown=languagetool:languagetool start.sh config.properties ./
 
+# The checksum matches the model shipped in erikvl87/languagetool:6.8, built in June 2026.
+ARG FASTTEXT_MODEL_SHA256=7e69ec5451bc261cc7844e49e4792a85d7f09c06789ec800fc4a44aec362764e
 RUN install -d -m 755 /fastText \
-    && curl -L https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin -o /fastText/lid.176.bin \
+    && curl -fsSL https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin -o /fastText/lid.176.bin \
+    && echo "${FASTTEXT_MODEL_SHA256}  /fastText/lid.176.bin" | sha256sum -c - \
     && chown -R languagetool:languagetool /fastText
 
 RUN set -eux; \

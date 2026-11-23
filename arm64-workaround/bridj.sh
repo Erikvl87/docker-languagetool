@@ -34,10 +34,12 @@ cd maven-velocity-plugin && git checkout 9762c6d95c6440d8c49d0550720986f7acd3c48
 mvn clean install -DskipTests
 cd /
 
-git clone http://github.com/nativelibs4java/BridJ.git
+git clone https://github.com/nativelibs4java/BridJ.git
 cd BridJ && git checkout 365792c16a4b5cbc7449e702a234d4e4494606a4
 cd /
 wget https://dyncall.org/r1.4/dyncall-1.4.tar.gz
+# Checksum published at https://dyncall.org/r1.4/SHA256
+echo "14437dbbef3b6dc92483f6507eaf825ab97964a89eecae8cb347a6bec9c32aae  dyncall-1.4.tar.gz" | sha256sum -c -
 tar xf dyncall-1.4.tar.gz
 rm dyncall-1.4.tar.gz
 mv dyncall-1.4 /BridJ/dyncall
