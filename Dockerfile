@@ -37,6 +37,9 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     update-locale LANG=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
+# Global Maven settings. See maven/settings.xml for why this is needed.
+COPY maven/settings.xml /etc/maven/settings.xml
+
 ARG LANGUAGETOOL_VERSION
 RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGETOOL_VERSION}
 WORKDIR /languagetool

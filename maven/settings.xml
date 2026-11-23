@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Global Maven settings for the build stage.
+
+  The LanguageTool pom declares repo.languagetool.org as an extra repository.
+  That host does not accept connections, which makes every dependency lookup
+  wait for a connection timeout before Maven falls back to Maven Central, and
+  the build never finishes. This mirror sends those lookups to Maven Central
+  directly, so all build dependencies come from a single, well-known source.
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>central-instead-of-repo.languagetool.org</id>
+      <mirrorOf>repo.languagetool.org</mirrorOf>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </mirror>
+  </mirrors>
+</settings>
