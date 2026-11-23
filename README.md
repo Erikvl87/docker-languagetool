@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/Erikvl87/docker-languagetool/workflows/Build/badge.svg)](https://github.com/Erikvl87/docker-languagetool) [![Tests Status](https://github.com/Erikvl87/docker-languagetool/workflows/Tests/badge.svg)](https://github.com/Erikvl87/docker-languagetool) [![Docker Pulls](https://img.shields.io/docker/pulls/erikvl87/languagetool)](https://hub.docker.com/r/erikvl87/languagetool) [![Latest GitHub tag](https://img.shields.io/github/v/tag/Erikvl87/docker-languagetool?label=GitHub%20tag)](https://github.com/Erikvl87/docker-languagetool/releases) 
+[![Build Status](https://github.com/Erikvl87/docker-languagetool/workflows/Build/badge.svg)](https://github.com/Erikvl87/docker-languagetool) [![Tests Status](https://github.com/Erikvl87/docker-languagetool/workflows/Tests/badge.svg)](https://github.com/Erikvl87/docker-languagetool) [![Vulnerability scan](https://github.com/Erikvl87/docker-languagetool/actions/workflows/scan.yml/badge.svg)](https://github.com/Erikvl87/docker-languagetool/actions/workflows/scan.yml) [![Docker Pulls](https://img.shields.io/docker/pulls/erikvl87/languagetool)](https://hub.docker.com/r/erikvl87/languagetool) [![Latest GitHub tag](https://img.shields.io/github/v/tag/Erikvl87/docker-languagetool?label=GitHub%20tag)](https://github.com/Erikvl87/docker-languagetool/releases) 
  
 # Dockerfile for LanguageTool 
 This repository contains a Dockerfile to create a Docker image for [LanguageTool](https://github.com/languagetool-org/languagetool). 
@@ -141,6 +141,12 @@ curl --data "language=en-US&text=a simple test" http://localhost:8010/v2/check
  
 Please refer to the official LanguageTool documentation for further usage instructions. 
  
+# Security
+
+Please report vulnerabilities privately, not in a public issue. See [SECURITY.md](SECURITY.md) for how to report, which tags get fixes, and what is in scope.
+
+Every pull request, every push to `main`, and a weekly scheduled run scan the image with [Grype](https://github.com/anchore/grype) ([workflow runs](https://github.com/Erikvl87/docker-languagetool/actions/workflows/scan.yml)). The weekly run also scans the published `latest` image on Docker Hub. A pull request fails the scan when the image has a HIGH or CRITICAL vulnerability that has a fixed version available.
+
 # Known issues & workarounds 
  
 If you experience problems when connecting local server to the official Firefox extension, see [cors-workaround](cors-workaround/). 
