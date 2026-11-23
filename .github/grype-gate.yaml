@@ -1,0 +1,9 @@
+# Grype configuration for the pass/fail gate in .github/workflows/scan.yml.
+#
+# The full report (uploaded to code scanning) does not use this file and still
+# lists every finding. The gate skips the LanguageTool distribution, because
+# its bundled Java libraries come from upstream LanguageTool and cannot be
+# fixed in this repository. See SECURITY.md for the scope.
+ignore:
+  - package:
+      location: "/LanguageTool/**"

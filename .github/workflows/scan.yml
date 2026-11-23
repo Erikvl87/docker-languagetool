@@ -1,0 +1,111 @@
+name: Scan vulnerabilities
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Weekly, so new CVEs in unchanged images are picked up.
+    - cron: '0 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GRYPE_VERSION: v0.122.1
+
+jobs:
+  # Scans an image built from this commit. All findings, whatever their
+  # severity, are uploaded to GitHub code scanning. The gate fails only on
+  # HIGH or CRITICAL findings that have a fixed version available, outside
+  # the LanguageTool distribution (see .github/grype-gate.yaml).
+  build:
+    name: Scan image built from source
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      security-events: write # Upload SARIF to code scanning.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build image
+        run: docker build -t languagetool:scan .
+
+      - name: Scan image (report)
+        id: report
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: languagetool:scan
+          grype-version: ${{ env.GRYPE_VERSION }}
+          cache-db: true
+          fail-build: false
+          severity-cutoff: negligible
+          output-format: sarif
+
+      # Pull requests from forks get a read-only token and cannot upload.
+      - name: Upload SARIF to code scanning
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        with:
+          sarif_file: ${{ steps.report.outputs.sarif }}
+          category: grype-build
+
+      - name: Fail on fixable HIGH or CRITICAL
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: languagetool:scan
+          grype-version: ${{ env.GRYPE_VERSION }}
+          cache-db: true
+          config: .github/grype-gate.yaml
+          fail-build: true
+          only-fixed: true
+          severity-cutoff: high
+          output-format: table
+
+  # Scans the image users pull today. It never fails the run, because a
+  # published image can only be fixed by a new release.
+  published:
+    name: Scan published image (erikvl87/languagetool:latest)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write # Upload SARIF to code scanning.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Pull image
+        run: docker pull erikvl87/languagetool:latest
+
+      - name: Scan image
+        id: report
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: erikvl87/languagetool:latest
+          grype-version: ${{ env.GRYPE_VERSION }}
+          cache-db: true
+          fail-build: false
+          severity-cutoff: negligible
+          output-format: sarif
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        with:
+          sarif_file: ${{ steps.report.outputs.sarif }}
+          category: grype-published
