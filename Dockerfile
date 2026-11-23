@@ -47,11 +47,15 @@ ARG LANGUAGETOOL_VERSION
 RUN git clone https://github.com/languagetool-org/languagetool.git --depth 1 -b v${LANGUAGETOOL_VERSION}
 WORKDIR /languagetool
 
-# Pre-download Maven dependencies using cache
-RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline -DskipTests
+# The Maven repository (/root/.m2) is kept in the image layers rather than in
+# a cache mount, so the test stage below can run without downloading every
+# dependency again, and the layers can be reused from a CI build cache.
+
+# Pre-download Maven dependencies
+RUN mvn dependency:go-offline -DskipTests -ntp
 
 # Build LanguageTool standalone
-RUN --mount=type=cache,target=/root/.m2 mvn --projects languagetool-standalone --also-make package -DskipTests --quiet
+RUN mvn --projects languagetool-standalone --also-make package -DskipTests --quiet -ntp
 
 RUN LANGUAGETOOL_DIST_VERSION=$(xmlstarlet sel -N "x=http://maven.apache.org/POM/4.0.0" -t -v "//x:project/x:properties/x:revision" pom.xml) && unzip /languagetool/languagetool-standalone/target/LanguageTool-${LANGUAGETOOL_DIST_VERSION}.zip -d /dist
 RUN LANGUAGETOOL_DIST_FOLDER=$(find /dist/ -name 'LanguageTool-*') && mv $LANGUAGETOOL_DIST_FOLDER /dist/LanguageTool
@@ -69,7 +73,21 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 
 WORKDIR /languagetool
 
-FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
+# Runs the LanguageTool server tests against the build above. Not part of the
+# image. Build it with `--target=test-results --output type=local,dest=<dir>`
+# to get the Surefire reports and the Maven exit code in `<dir>/exit-code`.
+# The step itself always succeeds, so the reports are exported when tests fail.
+FROM build AS test
+RUN mvn --projects languagetool-server --also-make test --errors -ntp; \
+    status=$?; \
+    mkdir -p /test-results; \
+    find . -path '*/target/surefire-reports' -type d -exec cp -r --parents {} /test-results \; ; \
+    echo "$status" > /test-results/exit-code
+
+FROM scratch AS test-results
+COPY --from=test /test-results /
+
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS runtime
 
 ARG TARGETARCH
 

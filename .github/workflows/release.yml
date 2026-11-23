@@ -23,18 +23,27 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@2b82ce82d56a2a04d2637cd93a637ae1b359c0a7 # v2.2.0
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@885d1462b80bc1c1c7f0b00334ad271f09369c55 # v2.10.0
-      - name: Build
-        run: docker build --target=build -t languagetool-build .
-      - name: Test
-        if:  ${{ inputs.skip_tests == null || inputs.skip_tests == false }} 
-        run: docker run languagetool-build mvn --projects languagetool-server clean test --also-make --errors
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      # Releases never use a cache from earlier runs. The push step below runs
+      # in the same builder, so it reuses the build stage from this step
+      # instead of building LanguageTool a second time.
+      - name: Build and test
+        if:  ${{ inputs.skip_tests == null || inputs.skip_tests == false }}
+        run: |
+          docker buildx build --no-cache --target=test-results --output type=local,dest=test-results .
+          exit "$(cat test-results/exit-code)"
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: surefire-reports
+          path: test-results/
       - name: Tag
         run: |
           echo 'DOCKER_TAG<<EOF' >> "$GITHUB_ENV"
@@ -48,6 +57,7 @@ jobs:
       - name: Push to Docker Hub
         run: |
           docker buildx build --push \
+            --no-cache-filter runtime \
             --tag $DOCKERHUB_REPOSITORY:$DOCKER_TAG \
             --tag $DOCKERHUB_REPOSITORY:latest \
             --platform linux/amd64,linux/arm64 .
