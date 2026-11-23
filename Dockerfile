@@ -2,7 +2,7 @@
 ARG LANGUAGETOOL_VERSION=6.8
 ARG TARGETARCH
 
-FROM debian:bookworm AS build
+FROM debian:bookworm@sha256:268fb24c39bca92d326dd83ea3abebe4a3f7751c804ffef23bb6d857dd343ff8 AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -66,11 +66,13 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
 
 WORKDIR /languagetool
 
-FROM alpine:3.24.0
+FROM alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 
 ARG TARGETARCH
 
-RUN apk add --no-cache \
+# Upgrade the packages from the base image as well, so fixes released after
+# the base image was built are included.
+RUN apk upgrade --no-cache && apk add --no-cache \
     bash \
     curl \
     fasttext \
