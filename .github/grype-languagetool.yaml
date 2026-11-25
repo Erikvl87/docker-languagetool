@@ -1,0 +1,40 @@
+# Grype configuration for findings in the LanguageTool distribution
+# (/LanguageTool), reported in the `grype-languagetool` code scanning category.
+#
+# These are the Java libraries that ship with LanguageTool. They are fixed by
+# updating to a LanguageTool release that includes newer versions. Grype has no
+# rule that keeps only one path, so every other top-level directory of the
+# image is ignored here. grype-image.yaml reports those.
+ignore:
+  - package:
+      location: "/bin/**"
+  - package:
+      location: "/etc/**"
+  - package:
+      location: "/fastText/**"
+  - package:
+      location: "/home/**"
+  - package:
+      location: "/lib/**"
+  - package:
+      location: "/media/**"
+  - package:
+      location: "/mnt/**"
+  - package:
+      location: "/nonexistent/**"
+  - package:
+      location: "/opt/**"
+  - package:
+      location: "/root/**"
+  - package:
+      location: "/run/**"
+  - package:
+      location: "/sbin/**"
+  - package:
+      location: "/srv/**"
+  - package:
+      location: "/tmp/**"
+  - package:
+      location: "/usr/**"
+  - package:
+      location: "/var/**"

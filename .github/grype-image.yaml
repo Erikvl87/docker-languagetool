@@ -1,0 +1,11 @@
+# Grype configuration for findings in the image itself: the Alpine packages,
+# the JRE, and everything else outside the LanguageTool distribution.
+#
+# Used for the `grype-image` code scanning category and for the pass/fail
+# gate in .github/workflows/scan.yml. The LanguageTool distribution is
+# reported separately (see grype-languagetool.yaml), because its bundled Java
+# libraries come from upstream LanguageTool and cannot be fixed in this
+# repository. See SECURITY.md for the scope.
+ignore:
+  - package:
+      location: "/LanguageTool/**"

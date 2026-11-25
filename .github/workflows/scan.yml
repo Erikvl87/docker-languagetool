@@ -28,9 +28,10 @@ env:
 
 jobs:
   # Scans an image built from this commit. All findings, whatever their
-  # severity, are uploaded to GitHub code scanning. The gate fails only on
-  # HIGH or CRITICAL findings that have a fixed version available, outside
-  # the LanguageTool distribution (see .github/grype-gate.yaml).
+  # severity, are uploaded to GitHub code scanning in two categories: the
+  # image itself and the LanguageTool distribution. The gate fails only on
+  # HIGH or CRITICAL findings in the image itself that have a fixed version
+  # available (see .github/grype-image.yaml).
   build:
     name: Scan image built from source
     runs-on: ubuntu-24.04
@@ -60,24 +61,44 @@ jobs:
           cache-from: type=gha,scope=image
           cache-to: type=gha,scope=image,mode=max
 
-      - name: Scan image (report)
-        id: report
+      - name: Scan image packages (report)
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
         with:
           image: languagetool:scan
           grype-version: ${{ env.GRYPE_VERSION }}
           cache-db: true
+          config: .github/grype-image.yaml
           fail-build: false
           severity-cutoff: negligible
           output-format: sarif
+          output-file: grype-image.sarif
+
+      - name: Scan LanguageTool distribution (report)
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: languagetool:scan
+          grype-version: ${{ env.GRYPE_VERSION }}
+          cache-db: true
+          config: .github/grype-languagetool.yaml
+          fail-build: false
+          severity-cutoff: negligible
+          output-format: sarif
+          output-file: grype-languagetool.sarif
 
       # Pull requests from forks get a read-only token and cannot upload.
-      - name: Upload SARIF to code scanning
+      - name: Upload image findings to code scanning
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
-          sarif_file: ${{ steps.report.outputs.sarif }}
-          category: grype-build
+          sarif_file: grype-image.sarif
+          category: grype-image
+
+      - name: Upload LanguageTool findings to code scanning
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        with:
+          sarif_file: grype-languagetool.sarif
+          category: grype-languagetool
 
       - name: Fail on fixable HIGH or CRITICAL
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
@@ -85,7 +106,7 @@ jobs:
           image: languagetool:scan
           grype-version: ${{ env.GRYPE_VERSION }}
           cache-db: true
-          config: .github/grype-gate.yaml
+          config: .github/grype-image.yaml
           fail-build: true
           only-fixed: true
           severity-cutoff: high
@@ -110,19 +131,38 @@ jobs:
       - name: Pull image
         run: docker pull erikvl87/languagetool:latest
 
-      - name: Scan image
-        id: report
+      - name: Scan image packages
         uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
         with:
           image: erikvl87/languagetool:latest
           grype-version: ${{ env.GRYPE_VERSION }}
           cache-db: true
+          config: .github/grype-image.yaml
           fail-build: false
           severity-cutoff: negligible
           output-format: sarif
+          output-file: grype-published-image.sarif
 
-      - name: Upload SARIF to code scanning
+      - name: Scan LanguageTool distribution
+        uses: anchore/scan-action@27805bf3b4e84b4a5c980df22ed233c00390a439 # v7.4.2
+        with:
+          image: erikvl87/languagetool:latest
+          grype-version: ${{ env.GRYPE_VERSION }}
+          cache-db: true
+          config: .github/grype-languagetool.yaml
+          fail-build: false
+          severity-cutoff: negligible
+          output-format: sarif
+          output-file: grype-published-languagetool.sarif
+
+      - name: Upload image findings to code scanning
         uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
         with:
-          sarif_file: ${{ steps.report.outputs.sarif }}
-          category: grype-published
+          sarif_file: grype-published-image.sarif
+          category: grype-published-image
+
+      - name: Upload LanguageTool findings to code scanning
+        uses: github/codeql-action/upload-sarif@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4.39.4
+        with:
+          sarif_file: grype-published-languagetool.sarif
+          category: grype-published-languagetool
