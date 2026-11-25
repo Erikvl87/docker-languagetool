@@ -2,6 +2,10 @@
 
 config_injected=false
 
+# reset to just the container-managed lines; loop below re-appends fresh config on start
+grep -E '^(fasttextModel|fasttextBinary)=' config.properties > config.properties.new
+mv config.properties.new config.properties
+
 for varname in ${!langtool_*}
 do
   key="${varname#'langtool_'}"
